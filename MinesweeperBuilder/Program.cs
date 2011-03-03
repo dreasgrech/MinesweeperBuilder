@@ -11,12 +11,12 @@ namespace MineSweeper
     {
         private const char MINE = '*', SPACE = '.';
 
-        static List<string[]> GetMineFields(IEnumerator<string> lineEnumerator)
+        static List<MineField> GetMineFields(IEnumerator<string> lineEnumerator)
         {
             MatchCollection metaData;
             Regex firstLineIdentifier = new Regex(@"^(\d)? (\d)?$"), fieldLineIdentifier;
 
-            var grids = new List<string[]>();
+            var grids = new List<MineField>();
             while ((metaData = firstLineIdentifier.Matches(lineEnumerator.Current)).Count > 0)
             {
                 int lines = Convert.ToInt32(metaData[0].Groups[1].Value),
@@ -34,7 +34,7 @@ namespace MineSweeper
                     }
                     grid[i] = lineEnumerator.Current;
                 }
-                grids.Add(grid);
+                grids.Add(new MineField(grid, MINE));
                 lineEnumerator.MoveNext();
             }
 
@@ -56,19 +56,19 @@ namespace MineSweeper
             {
                 var grid = grids[i];
                 output.AppendLine(String.Format("Field #{0}", i + 1));
-                for (int gridY = 0; gridY < grid.Length; gridY++)
+                for (int gridY = 0; gridY < grid.Rows; gridY++)
                 {
-                    var line = grid[gridY];
+                    var line = grid.GetRowAt(gridY);
                     for (int gridX = 0; gridX < line.Length; gridX++)
                     {
-                        var currentSymbol = line[gridX];
+                        var currentSymbol = grid.GetSymbolAt(gridX, gridY);
                         if (currentSymbol == MINE)
                         {
-                            output.Append('*');
+                            output.Append(MINE);
                             continue;
                         }
 
-                        var adjacentMines = GetAdjacentMineCount(gridX, gridY, grid);
+                        var adjacentMines = grid.GetAdjacentMineCount(gridX, gridY);
                         output.Append(adjacentMines);
                     }
                     output.AppendLine("");
@@ -81,39 +81,6 @@ namespace MineSweeper
             {
                 Console.ReadKey();
             }
-        }
-
-        static int GetAdjacentMineCount(int gridX, int gridY, string[] grid)
-        {
-            var adjacentMines = 0;
-
-            // Start checking adjacent cells
-            for (int adjacentLine = -1; adjacentLine <= 1; adjacentLine++)
-            {
-                for (int adjacentCell = -1; adjacentCell <= 1; adjacentCell++)
-                {
-                    if (adjacentCell == 0 && adjacentLine == 0)
-                    {
-                        continue;
-                    }
-                    int adjacentGridX = gridX + adjacentCell, adjacentGridY = gridY + adjacentLine;
-                    if (adjacentGridY == -1 || adjacentGridY > grid.Length - 1) // (x, -1) or (x, numOfLines + 1) => out of bounds
-                    {
-                        break;
-                    }
-                    if (adjacentGridX == -1 || adjacentGridX > grid[gridY].Length - 1) // (-1, y) or (numOfCells + 1, y) => out of bounds
-                    {
-                        continue;
-                    }
-                    var adjacentCellSymbol = grid[adjacentGridY][adjacentGridX];
-                    if (adjacentCellSymbol == MINE)
-                    {
-                        adjacentMines++;
-                    }
-                }
-            }
-
-            return adjacentMines;
         }
     }
 }

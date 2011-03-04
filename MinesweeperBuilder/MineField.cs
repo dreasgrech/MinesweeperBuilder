@@ -1,33 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
-namespace MineSweeper
+namespace MinesweeperBuilder
 {
     class MineField
     {
-        private string[] matrix;
+        private MineFieldRow[] matrix;
         private char mineSymbol;
 
-        public MineField(string[] matrix, char mineSymbol)
+        public MineField(string[] grid, char mineSymbol)
         {
             this.mineSymbol = mineSymbol;
-            this.matrix = matrix;
+            matrix = new MineFieldRow[grid.Length];
+            for (int i = 0; i < grid.Length; i++)
+            {
+                matrix[i] = new MineFieldRow(i,grid[i],mineSymbol);
+            }
         }
 
         public char GetSymbolAt(int x, int y)
         {
-            return matrix[y][x];
+            return matrix[y].GetSymbolAt(x);
         }
 
-        public string GetRowAt(int y)
+        public MineFieldRow GetRowAt(int y)
         {
             return matrix[y];
         }
 
         public int Rows { get { return matrix.Length; } }
         public int Columns { get { return matrix[0].Length; } }
+
+        public IEnumerable<MineFieldRow> GetRows()
+        {
+            for (int i = 0; i < Rows; i++)
+            {
+                yield return GetRowAt(i);
+            }
+        }
 
         public int GetAdjacentMineCount(int gridX, int gridY)
         {
@@ -51,7 +60,7 @@ namespace MineSweeper
                     {
                         continue;
                     }
-                    var adjacentCellSymbol = matrix[adjacentGridY][adjacentGridX];
+                    var adjacentCellSymbol = matrix[adjacentGridY].GetSymbolAt(adjacentGridX);
                     if (adjacentCellSymbol == mineSymbol)
                     {
                         adjacentMines++;
@@ -60,6 +69,11 @@ namespace MineSweeper
             }
 
             return adjacentMines;
+        }
+
+        public bool IsMineAt(int x, int y)
+        {
+            return GetRowAt(y).IsMineAt(x);
         }
     }
 }

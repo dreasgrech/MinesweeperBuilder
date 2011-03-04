@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="FileReader.cs" />
     <Compile Include="MineField.cs" />
+    <Compile Include="MineFieldRow.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

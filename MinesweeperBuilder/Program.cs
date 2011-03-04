@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using MineSweeper;
 
-namespace MineSweeper
+namespace MinesweeperBuilder
 {
     class Program
     {
@@ -13,6 +14,7 @@ namespace MineSweeper
 
         static List<MineField> GetMineFields(IEnumerator<string> lineEnumerator)
         {
+            lineEnumerator.MoveNext();
             MatchCollection metaData;
             Regex firstLineIdentifier = new Regex(@"^(\d)? (\d)?$"), fieldLineIdentifier;
 
@@ -22,7 +24,7 @@ namespace MineSweeper
                 int lines = Convert.ToInt32(metaData[0].Groups[1].Value),
                     columns = Convert.ToInt32(metaData[0].Groups[2].Value);
 
-                fieldLineIdentifier = new Regex(@"^(\*|\.){" + lines + "}");
+                fieldLineIdentifier = new Regex(@"^(\" + MINE + @"|\" +SPACE + "){" + lines + "}");
                 var grid = new string[lines];
 
                 for (int i = 0; i < lines; i++)
@@ -45,30 +47,31 @@ namespace MineSweeper
         {
             var output = new StringBuilder();
 
-            var fileReader = new FileReader(args[0]);
-            var lineEnumerator = fileReader.GetEnumerator();
-
-            lineEnumerator.MoveNext();
-
-            var grids = GetMineFields(lineEnumerator);
-
-            for (var i = 0; i < grids.Count; i++)
+            if (!File.Exists(args[0]))
             {
-                var grid = grids[i];
+                throw new FileLoadException("This file does not exist.  Wtf?");
+            }
+
+            var lineEnumerator = new FileReader(args[0]).GetEnumerator();
+
+            var mineFields = GetMineFields(lineEnumerator);
+
+            for (var i = 0; i < mineFields.Count; i++)
+            {
+                var grid = mineFields[i];
                 output.AppendLine(String.Format("Field #{0}", i + 1));
-                for (int gridY = 0; gridY < grid.Rows; gridY++)
+
+                foreach (var row in grid.GetRows())
                 {
-                    var line = grid.GetRowAt(gridY);
-                    for (int gridX = 0; gridX < line.Length; gridX++)
+                    for (int gridX = 0; gridX < row.Length; gridX++)
                     {
-                        var currentSymbol = grid.GetSymbolAt(gridX, gridY);
-                        if (currentSymbol == MINE)
+                        if (row.IsMineAt(gridX))
                         {
                             output.Append(MINE);
                             continue;
                         }
 
-                        var adjacentMines = grid.GetAdjacentMineCount(gridX, gridY);
+                        var adjacentMines = grid.GetAdjacentMineCount(gridX, row.Position);
                         output.Append(adjacentMines);
                     }
                     output.AppendLine("");

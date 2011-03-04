@@ -31,7 +31,7 @@ namespace MinesweeperBuilder
                     lineEnumerator.MoveNext();
                     if (lineEnumerator.Current.Length > columns || !fieldLineIdentifier.IsMatch(lineEnumerator.Current)) // the regex already checks for the length but if there are more characters, we can catch that with a trivial greater than operation rather than with IsMatch of the Regex, which is more expensive
                     {
-                        throw new Exception("Either the number of symbols in the line exceed the total specified by the fields or the line contains invalid characters");
+                        throw new Exception("So...either the number of symbols in the line exceed the total specified by the YOU before or the line contains invalid characters (Why would you do such a thing?).  Be con·sist·ent");
                     }
                     grid[i] = lineEnumerator.Current;
                 }

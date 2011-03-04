@@ -9,6 +9,8 @@ namespace MinesweeperBuilder
 {
     class Program
     {
+        // TODO: Command line options
+
         private const char MINE = '*', SPACE = '.';
 
         static List<MineField> GetMineFields(IEnumerator<string> lineEnumerator)
@@ -60,14 +62,14 @@ namespace MinesweeperBuilder
 
             var mineFields = GetMineFields(lineEnumerator);
 
-            for (var i = 0; i < mineFields.Count; i++)
+            for (var i = 0; i < mineFields.Count; i++) 
             {
                 var grid = mineFields[i];
                 output.AppendLine(String.Format("Field #{0}", i + 1));
 
                 foreach (var row in grid.GetRows())
                 {
-                    for (int gridX = 0; gridX < row.Length; gridX++)
+                    for (int gridX = 0; gridX < row.Length; gridX++) // iterate over all the cells of the current row
                     {
                         if (row.IsMineAt(gridX))
                         {
@@ -75,8 +77,8 @@ namespace MinesweeperBuilder
                             continue;
                         }
 
-                        var adjacentMines = grid.GetAdjacentMineCount(gridX, row.Position);
-                        output.Append(adjacentMines);
+                        var adjacentMineCount = grid.GetAdjacentMineCount(gridX, row.Position);
+                        output.Append(adjacentMineCount);
                     }
                     output.AppendLine("");
                 }

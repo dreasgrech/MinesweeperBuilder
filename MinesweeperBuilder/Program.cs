@@ -45,6 +45,11 @@ namespace MinesweeperBuilder
 
         static void Main(string[] args)
         {
+            if (args.Length == 0)
+            {
+                throw new FileNotFoundException("I need some sample input in the form of a path mate!  How can I work without some input from your side?");
+            }
+
             var output = new StringBuilder();
 
             if (!File.Exists(args[0]))

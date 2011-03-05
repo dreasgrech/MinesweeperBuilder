@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace MinesweeperBuilder
@@ -20,9 +21,19 @@ namespace MinesweeperBuilder
 
         public char GetSymbolAt(int cell)
         {
+            if (cell < 0 || cell >= Length)
+            {
+                throw new IndexOutOfRangeException(String.Format("The specified position, {0}, is out of bounds.  The range of the current cell is 0..{1}", cell, Length - 1));
+            }
+
             return row[cell];
         }
 
+        /// <summary>
+        /// Returns true if the cell is a mine
+        /// </summary>
+        /// <param name="cell"></param>
+        /// <returns></returns>
         public bool IsMineAt(int cell)
         {
             return GetSymbolAt(cell) == mineSymbol;

@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace MinesweeperBuilder
 {
@@ -81,6 +83,33 @@ namespace MinesweeperBuilder
             }
 
             return totalAdjacentMines;
+        }
+
+        /// <summary>
+        /// Returns the formatted representation of the grid
+        /// </summary>
+        /// <returns></returns>
+        public string GetNumberRepresentation()
+        {
+            var output = new StringBuilder();
+
+            foreach (var row in GetRows())
+            {
+                for (int gridX = 0; gridX < row.Length; gridX++) // iterate over all the cells of the current row
+                {
+                    if (row.IsMineAt(gridX))
+                    {
+                        output.Append(mineSymbol);
+                        continue;
+                    }
+
+                    var adjacentMineCount = GetAdjacentMineCount(gridX, row.Position);
+                    output.Append(adjacentMineCount);
+                }
+                output.AppendLine("");
+            }
+
+            return output.ToString();
         }
     }
 }

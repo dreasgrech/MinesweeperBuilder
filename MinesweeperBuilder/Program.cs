@@ -9,7 +9,10 @@ namespace MinesweeperBuilder
 {
     class Program
     {
-        // TODO: Command line options
+        /* TODO: Command line options
+         * TODO: The GetMineFields method doesn't belong in this class, so it needs refactoring to somewhere else
+         */
+
 
         private const char MINE = '*', SPACE = '.';
 
@@ -51,8 +54,6 @@ namespace MinesweeperBuilder
                 throw new FileNotFoundException("I need some sample input in the form of a path mate!  How can I work without some input from your side?");
             }
 
-            var output = new StringBuilder();
-
             if (!File.Exists(args[0]))
             {
                 throw new FileLoadException("This file does not exist.  Wtf?");
@@ -64,27 +65,9 @@ namespace MinesweeperBuilder
 
             for (var i = 0; i < mineFields.Count; i++) 
             {
-                var grid = mineFields[i];
-                output.AppendLine(String.Format("Field #{0}", i + 1));
-
-                foreach (var row in grid.GetRows())
-                {
-                    for (int gridX = 0; gridX < row.Length; gridX++) // iterate over all the cells of the current row
-                    {
-                        if (row.IsMineAt(gridX))
-                        {
-                            output.Append(MINE);
-                            continue;
-                        }
-
-                        var adjacentMineCount = grid.GetAdjacentMineCount(gridX, row.Position);
-                        output.Append(adjacentMineCount);
-                    }
-                    output.AppendLine("");
-                }
+                Console.WriteLine(String.Format("Field #{0}", i + 1));
+                Console.WriteLine(mineFields[i].GetNumberRepresentation());
             }
-
-            Console.WriteLine(output.ToString());
 
             if (Debugger.IsAttached) //Running from the IDE
             {

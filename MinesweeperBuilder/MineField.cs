@@ -89,7 +89,7 @@ namespace MinesweeperBuilder
         /// Returns the formatted representation of the grid
         /// </summary>
         /// <returns></returns>
-        public string GetNumberRepresentation()
+        public override string ToString()
         {
             var output = new StringBuilder();
 

@@ -72,7 +72,7 @@ namespace MinesweeperBuilder
             for (var i = 0; i < mineFields.Count; i++) 
             {
                 Console.WriteLine(String.Format("Field #{0}", i + 1));
-                Console.WriteLine(mineFields[i].GetNumberRepresentation());
+                Console.WriteLine(mineFields[i]);
             }
 
             if (Debugger.IsAttached) //Running from the IDE

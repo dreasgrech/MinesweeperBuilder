@@ -12,6 +12,7 @@ namespace MinesweeperBuilder
     {
         /* TODO: Command line options
          * TODO: The GetMineFields method doesn't belong in this class, so it needs refactoring to somewhere else
+         * TODO: https://github.com/dreasgrech/MinesweeperBuilder/issues#issue/1
          */
 
 

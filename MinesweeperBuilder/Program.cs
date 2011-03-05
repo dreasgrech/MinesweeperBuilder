@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace MinesweeperBuilder
 {
@@ -63,6 +64,10 @@ namespace MinesweeperBuilder
 
             var mineFields = GetMineFields(lineEnumerator);
 
+            if (mineFields.Count == 0)
+            {
+                throw new Exception("I found no mine fields in your file, and that's probably due to invalid formatting from your side.  Double check you file next time please.");
+            }
             for (var i = 0; i < mineFields.Count; i++) 
             {
                 Console.WriteLine(String.Format("Field #{0}", i + 1));
